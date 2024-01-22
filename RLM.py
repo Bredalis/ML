@@ -47,6 +47,9 @@ datos = pd.DataFrame({
 X = datos[['X1', 'X2']]
 y = datos['y']
 
+print(len(X))
+print(len(y))
+
 # Entrenar el modelo
 modelo_rlm.entrenar(X, y)
 
