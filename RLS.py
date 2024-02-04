@@ -15,7 +15,7 @@ from sklearn.linear_model import LinearRegression
 
 # Traer dataset
 
-url = 'C:/Users/Angelica Gerrero/Desktop/LenguajesDeProgramacion/Datasets/CSV/Advertising.csv'
+url = 'C:/Users/Bradalis/Desktop/LenguajesDeProgramacion/Datasets/CSV/Advertising.csv'
 df = pd.read_csv(url)
 
 # Mostar principales datos
