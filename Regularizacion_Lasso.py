@@ -12,19 +12,54 @@ from sklearn.metrics import mean_squared_error
 
 # Lectura de datos
 
-ruta = 'C:/Users/Bradalis/Desktop/LenguajesDeProgramacion/Datasets/CSV/Cars/all_bikez_curated.csv'
+ruta = 'C:/Users/Bradalis/Desktop/LenguajesDeProgramacion/Datasets/CSV/all_bikez_curated.csv'
 
 df = pd.read_csv(ruta) 
-print(f'DF: \n{df.head()}')
 
-print(df.columns)
+# Eliminar columnas de tipo 'object'
 
-# Division de datos
+df = df.select_dtypes(exclude = 'object')
+df = df.fillna(value = 0)
 
-df_x = df.drop(['Rating'], axis = 1)
+# Escalar las características
 
-x = df_x
-y = df['Rating']
+scaler = StandardScaler()
+df_scaled = scaler.fit_transform(df)
 
-print('\n', type(x))
-print(type(y))
+# Dividir los datos en entrenamiento y prueba
+
+X_train, X_test, y_train, y_test = train_test_split(df_scaled, df['Rating'], 
+	test_size = 0.2, random_state = 42)
+
+# Modelo
+
+lasso = Lasso(alpha = 0.1)
+
+# Entrenamiento
+
+lasso.fit(X_train, y_train)
+
+y_pred = lasso.predict(X_test)
+
+# Metrica
+
+print(mean_squared_error(y_test, y_pred))
+
+# Obtener coeficientes
+
+coefs = lasso.coef_
+
+# Nombres de las caracteristicas y coeficientes
+feature_names = df.columns
+feature_coefs = list(zip(feature_names, coefs))
+
+# Ordenar las caracteristicas segun el valor absoluto 
+# del coeficiente en orden descendente
+
+feature_coefs.sort(key = lambda x: abs(x[1]), reverse = True)
+
+# Mostrar las caracteristicas mas 
+# importantes y sus coeficientes
+
+for feature, coef in feature_coefs:
+	print(f'{feature}: {coef}')
