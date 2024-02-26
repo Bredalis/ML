@@ -13,7 +13,6 @@ from sklearn.metrics import mean_squared_error
 # Lectura de datos
 
 ruta = 'C:/Users/Bradalis/Desktop/LenguajesDeProgramacion/Datasets/CSV/all_bikez_curated.csv'
-
 df = pd.read_csv(ruta) 
 
 # Eliminar columnas de tipo 'object'

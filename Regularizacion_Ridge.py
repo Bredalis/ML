@@ -10,7 +10,6 @@ from sklearn.metrics import mean_squared_error
 # Dataset
 
 url = 'C:/Users/Bradalis/Desktop/LenguajesDeProgramacion/Datasets/CSV/all_bikez_curated.csv'
-
 df = pd.read_csv(url)
 
 print(f'DF: \n {df}')
@@ -31,10 +30,10 @@ print(f'DF escalado:\n {df_scaled}')
 
 # Division de datos
 
-x_train, x_test, y_train, y_test = train_test_split(df_scaled, df['Rating'], 
+X_train, X_test, y_train, y_test = train_test_split(df_scaled, df['Rating'], 
 	random_state = 42, test_size = 0.2)
 
-print(x_train.shape)
+print(X_train.shape)
 print(y_train.shape)
 
 # Modelo
@@ -43,9 +42,9 @@ modelo = Ridge(alpha = 0.1)
 
 # Entrenamiento
 
-modelo.fit(x_train, y_train)
+modelo.fit(X_train, y_train)
 
-y_pred = modelo.predict(x_test)
+y_pred = modelo.predict(X_test)
 
 # Metricas
 
