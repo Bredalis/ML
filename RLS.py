@@ -11,6 +11,7 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
 # Traer dataset
@@ -34,24 +35,26 @@ df.plot.scatter(x = 'TV', y = 'Sales', ax = ax1)
 df.plot.scatter(x = 'Radio', y = 'Sales', ax = ax2)
 df.plot.scatter(x = 'Newspaper', y = 'Sales', ax = ax3)
 
+plt.show()
+
 # Modelo
 
 modelo = LinearRegression(fit_intercept = True)
 
 # Dividimos los datos en X y Y
 
-x = df.loc[:, ['TV']]
+X = df.loc[:, ['TV']]
 y = df['Sales']
 
-print(x)
+print(X)
 print(y)
 
-print(x.shape)
+print(X.shape)
 print(y.shape)
 
 # Entrenamiento
 
-modelo.fit(x, y)
+modelo.fit(X, y)
 
 # Coeficientes
 print(modelo.coef_)
@@ -60,3 +63,10 @@ print(modelo.coef_)
 # unidades de inversion
 
 print(modelo.predict([[4]]))
+
+# Grafica
+
+plt.scatter(X, y)
+plt.plot(X, modelo.predict(X))
+
+plt.show()

@@ -55,23 +55,14 @@ print(f'Tiempo de ejecucion: {tiempo_grid}')
 print(f'Mejor combinacion de parametros: {grid_search.best_params_}')
 print(f'Definicion del modelo: {grid_search.best_estimator_}')
 
-# Coeficientes finales
+# Entrenamiento
 
-coefs_finales_grid = pd.DataFrame([np.array(X_train.columns.tolist()), 
-                                  grid_search.best_estimator_.coef_])
-
-filas = [row for index, row in coefs_finales_grid.iterrows()]
-resultado = pd.concat(filas)
-
-df = list(zip(resultado[:9], resultado[9:]))
-
-for i in df:
-  print(i)
+gridsearch.fit(X_train, y_train)
 
 # Optimizacion
 
 y_pred_grid = grid_search.best_estimator_.predict(X_test)
-mse_random = mean_squared_error(y_test, y_pred_grid)
+mse_grid = mean_squared_error(y_test, y_pred_grid)
 
 # Crear un df con la informacion
 
@@ -81,3 +72,26 @@ df_evaluacion = pd.DataFrame({
 })
 
 print('\n', df_evaluacion)
+
+y_pred = gridsearch.predict(X_test)
+mse = mean_squared_error(y_pred, y_test)
+
+print(mse)
+
+tiempo_final = timepo_inicial - time.time()
+
+print(f'Tiempo de ejecucion: {tiempo_final}')
+print(f'Mejor combinacion de parametros: {gridsearch.best_params_}')
+print(f'Definicion del modelo: {gridsearch.best_estimator_}')
+
+feature_coef = list(zip(df.columns, gridsearch.best_estimator_.coef_))
+
+for feature, coef in feature_coef:
+  print(f'{feature}: {coef}')
+
+df_evaluacion = pd.DataFrame({
+  'Estrategia': ['GridSearch'], 'Timepo': [tiempo_final],
+  'Metrica': ['MSE'], 'Valor': [mse], 'Folds': [20]
+})
+
+print(df_evaluacion)

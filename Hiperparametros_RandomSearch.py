@@ -62,16 +62,10 @@ print(f'Combinaciones evaluadas: {n_iteraciones}')
 
 # Mostrar los coeficientes
 
-coefs_finales_random = pd.DataFrame([np.array(X_train.columns.tolist()), 
-                                  random_search.best_estimator_.coef_])
+eature_coefs = list(zip(df.columns, random_search.best_estimator_.coef_))
 
-filas = [row for index, row in coefs_finales_random.iterrows()]
-resultado = pd.concat(filas)
-
-df = list(zip(resultado[:9], resultado[9:]))
-
-for i in df:
-  print(i)
+for feature, coef in feature_coefs:
+	print(f'{feature}: {coef}')
 
 # Optimizacion
 

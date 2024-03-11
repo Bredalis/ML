@@ -61,5 +61,7 @@ grid = GridSearchCV(pipeline, param_grid = parametros, cv = 20,
 
 grid.fit(X_train, y_train)
 
-print(f'Mejor score: {grid.score(X_test, y_test)}')
+y_pred = grid.predict(X_test)
+
+print(f'Mejor score: {grid.score(X_test, y_pred)}')
 print(f'Mejores parametros: {grid.best_params_}')

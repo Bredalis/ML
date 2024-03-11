@@ -25,12 +25,12 @@ X_train, X_test, y_train, y_test = train_test_split(df[['X']], df['y'],
 
 # Modelo y entrenamiento
 
-modelo_rlm = LinearRegression()
-modelo_rlm.fit(X_train, y_train)
+modelo = LinearRegression()
+modelo.fit(X_train, y_train)
 
 # Predicciones
 
-y_pred = modelo_rlm.predict(X_test)
+y_pred = modelo.predict(X_test)
 
 # Evaluar el rendimiento del modelo
 
@@ -44,7 +44,7 @@ plt.plot(X_test, y_pred, color = 'blue', linewidth = 3, label = 'Predicciones')
 
 plt.xlabel('Variable Independiente')
 plt.ylabel('Variable Dependiente')
-plt.title('Predicciones del Modelo de Regresión Lineal')
+plt.title('Predicciones del Modelo de Regresión Lineal Multiple')
 plt.legend()
 
 plt.show()
