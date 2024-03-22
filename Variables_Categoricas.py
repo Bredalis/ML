@@ -21,7 +21,8 @@ print(df_categoricas)
 
 # Convertir todas las columnas
 
-categorico_numerico = pd.get_dummies(df_categoricas, drop_first = True)
+categorico_numerico = pd.get_dummies(df_categoricas, 
+	drop_first = True, dtype = int)
 print(categorico_numerico)
 
 # DF final con datos numericos
