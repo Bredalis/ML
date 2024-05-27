@@ -19,7 +19,7 @@ print(df_numerico)
 df_categoricas = df.filter(["sex", "smoker", "day", "time"])
 print(df_categoricas)
 
-# Convertir todas las columnas
+# Convertir a columnas numericas
 
 categorico_numerico = pd.get_dummies(df_categoricas, 
 	drop_first = True, dtype = int)

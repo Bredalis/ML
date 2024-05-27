@@ -14,14 +14,17 @@ class RegresionLinealMultiple:
         self.intercepto = None
 
     def entrenar(self, X, y):
-        X_entrenamiento, X_prueba, y_entrenamiento, y_prueba = train_test_split(X, y, test_size = 0.2, random_state = 42)
+        X_entrenamiento, X_prueba, y_entrenamiento, y_prueba = train_test_split(X, y, 
+            test_size = 0.2, random_state = 42)
         self.modelo.fit(X_entrenamiento, y_entrenamiento)
 
         # Almacenar coeficientes e intercepto para referencia futura
+
         self.coeficientes = self.modelo.coef_
         self.intercepto = self.modelo.intercept_
 
         # Evaluar el rendimiento en el conjunto de prueba
+
         y_prediccion = self.modelo.predict(X_prueba)
         mse = mean_squared_error(y_prueba, y_prediccion)
         r2 = r2_score(y_prueba, y_prediccion)
@@ -33,6 +36,7 @@ class RegresionLinealMultiple:
         return self.modelo.predict(X_nuevos)
 
 # Crear una instancia de la clase
+
 modelo_rlm = RegresionLinealMultiple()
 
 # Datos

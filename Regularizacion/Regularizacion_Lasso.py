@@ -36,7 +36,6 @@ lasso = Lasso(alpha = 0.1)
 # Entrenamiento
 
 lasso.fit(X_train, y_train)
-
 y_pred = lasso.predict(X_test)
 
 # Metrica
@@ -48,6 +47,7 @@ print(mean_squared_error(y_test, y_pred))
 coefs = lasso.coef_
 
 # Nombres de las caracteristicas y coeficientes
+
 feature_names = df.columns
 feature_coefs = list(zip(feature_names, coefs))
 

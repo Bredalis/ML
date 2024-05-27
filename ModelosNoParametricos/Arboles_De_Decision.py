@@ -7,7 +7,8 @@ import seaborn as sns
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import (accuracy_score, classification_report, 
+	confusion_matrix)
 
 # Obtenemos el dataset
 
@@ -67,7 +68,8 @@ print(arbol.feature_importances_)
 
 # Calcular las 5 feature importantes mas altas
 
-importantes_features = pd.Series(arbol.feature_importances_).sort_values(ascending = False)[:5]
+importantes_features = pd.Series(arbol.feature_importances_).sort_values(
+	ascending = False)[:5]
 print(importantes_features)
 
 # Grafica de las features

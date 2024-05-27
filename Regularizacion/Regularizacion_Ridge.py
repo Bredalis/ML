@@ -42,7 +42,6 @@ modelo = Ridge(alpha = 0.1)
 # Entrenamiento
 
 modelo.fit(X_train, y_train)
-
 y_pred = modelo.predict(X_test)
 
 # Metricas

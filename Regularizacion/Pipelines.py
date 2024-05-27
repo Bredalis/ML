@@ -59,7 +59,6 @@ grid = GridSearchCV(pipeline, param_grid = parametros, cv = 20,
 # Ajustamos nuestro modelo
 
 grid.fit(X_train, y_train)
-
 y_pred = grid.predict(X_test)
 
 print(f"Mejor score: {grid.score(X_test, y_pred)}")

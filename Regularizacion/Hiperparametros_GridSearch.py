@@ -21,7 +21,7 @@ parametros = {
 modelo = ElasticNet()
 
 grid_search = GridSearchCV(estimator = modelo, param_grid = parametros, 
-                          cv = 20, scoring = "neg_mean_squared_error")
+  cv = 20, scoring = "neg_mean_squared_error")
 
 # Cargar el conjunto de datos
 

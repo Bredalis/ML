@@ -18,15 +18,14 @@ parametros = {
 
 n_iteraciones = 15
 semilla = 2021
+tiempo_inicial = time.time()
 
 # Ajustamos el modelo
 
-tiempo_inicial = time.time()
-
 modelo = ElasticNet()
 random_search = RandomizedSearchCV(estimator = modelo, n_iter = n_iteraciones,
-	param_distributions = parametros, cv = 20, scoring = "neg_mean_squared_error",
-	random_state = semilla)
+	param_distributions = parametros, cv = 20, 
+	scoring = "neg_mean_squared_error",	random_state = semilla)
 
 # Cargar el conjunto de datos
 

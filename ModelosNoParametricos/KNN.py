@@ -35,83 +35,46 @@ plt.show()
 
 # Creacion y entrenamiento del modelo
 
+def grafica(cantidad, tipo):
+
+	modelo = KNeighborsClassifier(n_neighbors = cantidad, weights = tipo)
+	modelo.fit(X, y)
+
+	cmap_light = ListedColormap(["#FFAAAA", "#AAFFAA", "#AAAAFF"])
+	cmap_bold = ListedColormap(["#FF0000", "#00FF00", "#0000FF"])
+
+	# Una grilla y setear un step
+
+	h = .02 
+	x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+	y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+	xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+	Z = modelo.predict(np.c_[xx.ravel(), yy.ravel()])
+
+	# Usamos un pcolormesh
+
+	Z = Z.reshape(xx.shape)
+	plt.figure()
+	plt.pcolormesh(xx, yy, Z, cmap = cmap_light)
+
+	# Ploteamos también los puntos de entrenamiento
+
+	plt.scatter(X[:, 0], X[:, 1], c = y, cmap = cmap_bold)
+	plt.xlim(xx.min(), xx.max())
+	plt.ylim(yy.min(), yy.max())
+	plt.title("2-Class classification (k = %i, weights = '%s')"
+		% (cantidad, tipo))
+
+	plt.show()
+
 # Grafica con k = 10
 
-modelo = KNeighborsClassifier(n_neighbors = 10, weights = "uniform")
-modelo.fit(X, y)
+grafica(10, "uniform")
 
-cmap_light = ListedColormap(["#FFAAAA", "#AAFFAA", "#AAAAFF"])
-cmap_bold = ListedColormap(["#FF0000", "#00FF00", "#0000FF"])
+# k = 200
 
-# Una grilla y setear un step
-h = .02 
-x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-Z = modelo.predict(np.c_[xx.ravel(), yy.ravel()])
+grafica(200, "uniform")
 
-# Usamos un pcolormesh
-Z = Z.reshape(xx.shape)
-plt.figure()
-plt.pcolormesh(xx, yy, Z, cmap = cmap_light)
+# k = 200 distance
 
-# Ploteamos también los puntos de entrenamiento
-plt.scatter(X[:, 0], X[:, 1], c = y, cmap = cmap_bold)
-plt.xlim(xx.min(), xx.max())
-plt.ylim(yy.min(), yy.max())
-plt.title("2-Class classification (k = %i, weights = '%s')"
-	% (10, "uniform"))
-
-plt.show()
-
-# Grafica con k = 200
-
-modelo = KNeighborsClassifier(n_neighbors = 200, weights = "uniform")
-modelo.fit(X, y)
-
-# Tenemos que armar una grilla y setear un step
-h = .02 
-x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-Z = modelo.predict(np.c_[xx.ravel(), yy.ravel()])
-
-# Usamos un pcolormesh
-Z = Z.reshape(xx.shape)
-plt.figure()
-plt.pcolormesh(xx, yy, Z, cmap = cmap_light)
-
-# Ploteamos también los puntos de entrenamiento
-plt.scatter(X[:, 0], X[:, 1], c = y, cmap = cmap_bold)
-plt.xlim(xx.min(), xx.max())
-plt.ylim(yy.min(), yy.max())
-plt.title("2-Class classification (k = %i, weights = '%s')"
-	% (200, "uniform"))
-
-plt.show()
-
-# Grafica con k = 200 distance
-
-modelo = KNeighborsClassifier(n_neighbors = 200, weights = "distance")
-modelo.fit(X, y)
-
-# Tenemos que armar una grilla y setear un step
-h = .02 
-x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-Z = modelo.predict(np.c_[xx.ravel(), yy.ravel()])
-
-# Usamos un pcolormesh
-Z = Z.reshape(xx.shape)
-plt.figure()
-plt.pcolormesh(xx, yy, Z, cmap = cmap_light)
-
-# Ploteamos también los puntos de entrenamiento
-plt.scatter(X[:, 0], X[:, 1], c = y, cmap = cmap_bold)
-plt.xlim(xx.min(), xx.max())
-plt.ylim(yy.min(), yy.max())
-plt.title("2-Class classification (k = %i, weights = '%s')"
-	% (200, "distance"))
-
-plt.show()
+grafica(200, "distance")

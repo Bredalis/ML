@@ -14,17 +14,14 @@ plt.rc("font", size = 12)
 lista_1 = [* range(10, 30)]
 lista_2 = [
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-	0, 1, 1, 1, 1, 1, 1, 1, 1, 1
-]
+	0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 print(lista_1)
 print(lista_2)
 
 # Crear df
 
-df = pd.DataFrame(list(zip(lista_1, lista_2)), 
-	columns = ["Edad", "Compras"])
-
+df = pd.DataFrame(list(zip(lista_1, lista_2)), columns = ["Edad", "Compras"])
 print(df)
 
 # Grafica de los datos
@@ -50,10 +47,7 @@ print(df)
 # Grafica de las predicciones
 
 sns.regplot(
-	data = df, x = "Edad", y = "Compras",
-	ci = None
-)
-
+	data = df, x = "Edad", y = "Compras", ci = None)
 plt.show()
 
 # Grafica con los 
@@ -61,7 +55,6 @@ plt.show()
 
 sns.regplot(
 	data = df, x = "Edad", y = "Compras",
-	logistic = True, ci = None
-)
+	logistic = True, ci = None)
 
 plt.show()

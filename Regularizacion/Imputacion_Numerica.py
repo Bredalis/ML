@@ -13,8 +13,7 @@ df = pd.read_csv("Advertising.csv")
 print("DF: \n", df)
 print(df.columns)
 
-# Cantidad de datos
-# faltantes en cada columna
+# Cantidad de datos faltantes
 
 print(df.isnull().sum())
 
@@ -24,30 +23,17 @@ print(df.isnull().sum())
 df_numerico = df[["Sales"]]
 
 # Aplicar distintas imputaciones
-# Imputar con la media
 
-imputer = SimpleImputer(missing_values = np.nan, strategy = "mean")
-imputer.fit(df_numerico)
-df_numerico["Mean"] = imputer.transform(df_numerico)
+def imputaciones(estrategia, datos, columna, valor = None):
+	imputer = SimpleImputer(missing_values = np.nan, strategy = estrategia, 
+		fill_value = valor)
 
-# Imputar con la mediana
+	imputer.fit(datos)
+	df_numerico[columna] = imputer.transform(datos)
 
-imputer = SimpleImputer(missing_values = np.nan, strategy = "median")
-imputer.fit(df_numerico[["Sales"]])
-df["Median"] = imputer.transform(df_numerico[["Sales"]])
-
-# Imputar con un valor constante
-
-imputer = SimpleImputer(missing_values = np.nan, strategy = "constant", 
-	fill_value = 99999)
-
-imputer.fit(df_numerico[["Sales"]])
-df_numerico["Constante"] = imputer.transform(df_numerico[["Sales"]])
-
-# Imputar con un valor mas frecuente
-
-imputer = SimpleImputer(missing_values = np.nan, strategy = "most_frequent")
-imputer.fit(df_numerico[["Sales"]])
-df_numerico["Mas_Frecuente"] = imputer.transform(df_numerico[["Sales"]])
+imputaciones("mean", df_numerico, "Mean")
+imputaciones("median", df_numerico[["Sales"]], "Median")
+imputaciones("constant", df_numerico[["Sales"]], "Constante", 99999)
+imputaciones("most_frequent", df_numerico[["Sales"]], "Mas_Frecuente")
 
 print(df_numerico)

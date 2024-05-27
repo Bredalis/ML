@@ -51,37 +51,32 @@ resultados_test_u = []
 resultados_train_w = []
 resultados_test_w = []
 
+def instanciar_modelo(tipo, resultados_train, resultados_test):
+	clf = KNeighborsClassifier(n_neighbors = k, weights = tipo)
+	clf.fit(X_train, y_train)
+
+	y_train_pred = clf.predict(X_train)
+	y_pred = clf.predict(X_test)
+
+	resultados_train.append(accuracy_score(y_train_pred, y_train))
+	resultados_test.append(accuracy_score(y_pred, y_test))
+
 for k in valores_k:
-
-	# Instanciamos el modelo uniforme
-	clf_u = KNeighborsClassifier(n_neighbors = k, weights = "uniform")
-	clf_u.fit(X_train, y_train)
-
-	y_train_pred = clf_u.predict(X_train)
-	y_pred = clf_u.predict(X_test)
-
-	resultados_train_u.append(accuracy_score(y_train_pred, y_train))
-	resultados_test_u.append(accuracy_score(y_pred, y_test))
-
-	# Instanciamos el modelo distance
-	clf_w = KNeighborsClassifier(n_neighbors = k, weights = "distance")
-	clf_w.fit(X_train, y_train)
-	y_train_pred = clf_w.predict(X_train)
-	y_pred = clf_w.predict(X_test)
-
-	resultados_train_w.append(accuracy_score(y_train_pred, y_train))
-	resultados_test_w.append(accuracy_score(y_pred, y_test))
+	instanciar_modelo("uniform", resultados_train_u, resultados_test_u)
+	instanciar_modelo("distance", resultados_train_w, resultados_test_w)
 
 # Grafica de los datos
 
 f, ax = plt.subplots(1, 2, figsize = (14, 5), sharey = True)
-ax[0].plot(valores_k, resultados_train_u, valores_k, resultados_test_u)
-ax[0].legend(["Pesos uniformes - train", "Pesos uniformes - test"])
-ax[0].set(xlabel = "k", ylabel = "accuracy")
 
-ax[1].plot(valores_k, resultados_train_w, valores_k, resultados_test_w)
-ax[1].legend(["Pesos distancia - train", "Pesos distancia - test"])
-ax[1].set(xlabel = "k")
+def grafica(indice, resultados_train, resultados_test, y = None):
+
+	ax[indice].plot(valores_k, resultados_train, valores_k, resultados_test)
+	ax[indice].legend(["Pesos uniformes - train", "Pesos uniformes - test"])
+	ax[indice].set(xlabel = "k", ylabel = y)
+
+grafica(0, resultados_train_u, resultados_test_u)
+grafica(1, resultados_train_w, resultados_test_w, "accuracy")
 
 plt.show()
 
@@ -101,4 +96,5 @@ grid.fit(X_train, y_train)
 
 print(grid.best_params_)
 print(pd.DataFrame(grid.cv_results_).sample(3))
-print(classification_report(y_test, grid.best_estimator_.predict(X_test), target_names = data_clases))
+print(classification_report(y_test, grid.best_estimator_.predict(X_test), 
+	target_names = data_clases))

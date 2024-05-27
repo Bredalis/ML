@@ -56,6 +56,7 @@ print(y.shape)
 modelo.fit(X, y)
 
 # Coeficientes
+
 print(modelo.coef_)
 
 # Predecir con 4 

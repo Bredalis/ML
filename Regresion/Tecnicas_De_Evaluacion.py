@@ -40,7 +40,8 @@ r2 = r2_score(y_test, y_pred)
 # Grafica
 
 plt.scatter(X_test, y_test, color = "black", label = "Datos reales")
-plt.plot(X_test, y_pred, color = "blue", linewidth = 3, label = "Predicciones")
+plt.plot(X_test, y_pred, color = "blue", linewidth = 3, 
+    label = "Predicciones")
 
 plt.xlabel("Variable Independiente")
 plt.ylabel("Variable Dependiente")
