@@ -29,7 +29,7 @@ random_search = RandomizedSearchCV(estimator = modelo, n_iter = n_iteraciones,
 
 # Cargar el conjunto de datos
 
-df = pd.read_csv("Advertising.csv")
+df = pd.read_csv("../CSV/Advertising.csv")
 
 df = df.select_dtypes(exclude = "object")
 df = df.fillna(value = 0)

@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error
 
 # Dataset
 
-df = pd.read_csv("Advertising.csv")
+df = pd.read_csv("../CSV/Advertising.csv")
 
 print(f"DF: \n {df}")
 print(f"DF Columnas: \n {df.columns}")

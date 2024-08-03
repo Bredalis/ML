@@ -16,7 +16,7 @@ from sklearn.linear_model import LinearRegression
 
 # Traer dataset
 
-df = pd.read_csv("Advertising.csv")
+df = pd.read_csv("../CSV/Advertising.csv")
 
 # Mostar principales datos
 

@@ -25,7 +25,7 @@ grid_search = GridSearchCV(estimator = modelo, param_grid = parametros,
 
 # Cargar el conjunto de datos
 
-df = pd.read_csv("Advertising.csv")
+df = pd.read_csv("../CSV/Advertising.csv")
 print(df.columns)
 
 df = df.select_dtypes(exclude = "object")

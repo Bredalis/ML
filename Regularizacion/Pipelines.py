@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Dataset
 
-df = pd.read_csv("Advertising.csv")
+df = pd.read_csv("../CSV/Advertising.csv")
 
 # Incluir columnas: int64, float64
 

@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error
 
 # Lectura de datos
 
-df = pd.read_csv("Advertising.csv") 
+df = pd.read_csv("../CSV/Advertising.csv") 
 
 # Eliminar columnas de tipo "object"
 

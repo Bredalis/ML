@@ -8,7 +8,7 @@ from sklearn.impute import SimpleImputer
 
 # Dataset
 
-df = pd.read_csv("Advertising.csv")
+df = pd.read_csv("../CSV/Advertising.csv")
 
 print("DF: \n", df)
 print(df.columns)
