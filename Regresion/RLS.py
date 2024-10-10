@@ -7,7 +7,7 @@
 # y las ventas. Las variables predictoras son los 
 # presupuestos para cada canal (TV, radio, diario).
 
-# Librerias
+# Librerías
 
 import pandas as pd
 import numpy as np

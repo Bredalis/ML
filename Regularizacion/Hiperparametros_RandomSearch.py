@@ -1,5 +1,5 @@
 
-# Librerias 
+# Librerías 
 
 import time
 import pandas as pd
