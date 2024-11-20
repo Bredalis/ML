@@ -1,97 +1,58 @@
 
 # Librerías
-
 import time
 import pandas as pd
-import numpy as np
-import itertools as it
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.linear_model import ElasticNet
 from sklearn.metrics import mean_squared_error
 
-# Definimos la grilla
-
+# Definir la grilla de parámetros
 parametros = {
   "alpha": [0.001, 0.01, 0.1, 1, 10, 100],
   "l1_ratio": [0, 0.25, 0.5, 0.75, 1]
 }
 
 # Modelo
-
 modelo = ElasticNet()
 
+# Configuración de GridSearchCV
 grid_search = GridSearchCV(estimator = modelo, param_grid = parametros, 
   cv = 20, scoring = "neg_mean_squared_error")
 
-# Cargar el conjunto de datos
-
+# Cargar y preparar el conjunto de datos
 df = pd.read_csv("../CSV/Advertising.csv")
-print(df.columns)
+df = df.select_dtypes(exclude = "object").fillna(value = 0)
 
-df = df.select_dtypes(exclude = "object")
-df = df.fillna(value = 0)
-
-# Separar las características (X_train) 
-# y la variable objetivo (y_train)
-
+# Separar características (X) y variable objetivo (y)
 X = df.drop("Sales", axis = 1)
 y = df["Sales"]
 
-# Division de datos
-
+# División de los datos en entrenamiento y prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, 
-  random_state = 42, test_size = 0.2)
+  test_size = 0.2, random_state = 42)
 
-print(X_train.shape)
-print(y_train.shape)
-
-# Ajustamiento del modelo
-
+# Ajuste del modelo
 tiempo_inicial = time.time()
+grid_search.fit(X_train, y_train)
 tiempo_grid = time.time() - tiempo_inicial
-grid_search.fit(X_train, y_train)
 
-print(f"Tiempo de ejecucion: {tiempo_grid}")
-print(f"Mejor combinacion de parametros: {grid_search.best_params_}")
-print(f"Definicion del modelo: {grid_search.best_estimator_}")
+# Resultados de la búsqueda
+print(f"Tiempo de ejecución: {tiempo_grid}")
+print(f"Mejor combinación de parámetros: {grid_search.best_params_}")
+print(f"Mejor modelo: {grid_search.best_estimator_}")
 
-# Entrenamiento
-
-grid_search.fit(X_train, y_train)
-
-# Optimizacion
-
+# Predicción y evaluación
 y_pred_grid = grid_search.best_estimator_.predict(X_test)
 mse_grid = mean_squared_error(y_test, y_pred_grid)
 
-# Crear un df con la informacion
-
+# Crear DataFrame con la evaluación
 df_evaluacion = pd.DataFrame({
-  "Estrategia": ["GridSearch"], "Tiempo": [tiempo_grid], 
-  "Metrica": ["MSE"], "Valor": [mse_grid], "Folds": [20] 
+    "Estrategia": ["GridSearch"], "Tiempo": [tiempo_grid], 
+    "Metrica": ["MSE"], "Valor": [mse_grid], "Folds": [20]
 })
-
-print("\n", df_evaluacion)
-
-y_pred = grid_search.predict(X_test)
-mse = mean_squared_error(y_pred, y_test)
-
-print(mse)
-
-tiempo_final = tiempo_inicial - time.time()
-
-print(f"Tiempo de ejecucion: {tiempo_final}")
-print(f"Mejor combinacion de parametros: {grid_search.best_params_}")
-print(f"Definicion del modelo: {grid_search.best_estimator_}")
-
-feature_coef = list(zip(df.columns, grid_search.best_estimator_.coef_))
-
-for feature, coef in feature_coef:
-  print(f"{feature}: {coef}")
-
-df_evaluacion = pd.DataFrame({
-  "Estrategia": ["GridSearch"], "Timepo": [tiempo_final],
-  "Metrica": ["MSE"], "Valor": [mse], "Folds": [20]
-})
-
 print(df_evaluacion)
+
+# Coeficientes de las características
+feature_coef = list(zip(df.columns, grid_search.best_estimator_.coef_))
+for feature, coef in feature_coef:
+    print(f"{feature}: {coef}")

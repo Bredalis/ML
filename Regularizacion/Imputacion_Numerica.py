@@ -1,39 +1,30 @@
 
-# Feature Engineering
 # Librerías
-
 import pandas as pd 
 import numpy as np
 from sklearn.impute import SimpleImputer
 
-# Dataset
-
+# Cargar el dataset
 df = pd.read_csv("../CSV/Advertising.csv")
-
-print("DF: \n", df)
-print(df.columns)
+print("DF:\n", df)
 
 # Cantidad de datos faltantes
+print("Datos faltantes:\n", df.isnull().sum())
 
-print(df.isnull().sum())
-
-# Separar df en 
-# numericas y categoricas
-
+# Separar columnas numéricas
 df_numerico = df[["Sales"]]
 
-# Aplicar distintas imputaciones
+# Función para aplicar distintas imputaciones
+def imputaciones(estrategia, datos, columna, valor=None):
+    imputer = SimpleImputer(missing_values = np.nan, strategy = estrategia, fill_value = valor)
+    imputer.fit(datos)
+    df_numerico[columna] = imputer.transform(datos)
 
-def imputaciones(estrategia, datos, columna, valor = None):
-	imputer = SimpleImputer(missing_values = np.nan, strategy = estrategia, 
-		fill_value = valor)
-
-	imputer.fit(datos)
-	df_numerico[columna] = imputer.transform(datos)
-
+# Aplicar distintas estrategias de imputación
 imputaciones("mean", df_numerico, "Mean")
 imputaciones("median", df_numerico[["Sales"]], "Median")
 imputaciones("constant", df_numerico[["Sales"]], "Constante", 99999)
 imputaciones("most_frequent", df_numerico[["Sales"]], "Mas_Frecuente")
 
+# Mostrar el DataFrame con imputaciones
 print(df_numerico)

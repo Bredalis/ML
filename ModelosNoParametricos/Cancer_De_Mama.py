@@ -1,100 +1,78 @@
 
 # Librerías
-
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
-# Obtenemos el dataset
-
+# Cargar el dataset
 data = load_breast_cancer()
-print(data.keys())
 
-# Separar los datos
+# Invertir el mapeo de las clases: 0 = Benigno, 1 = Maligno
+clases = [data.target_names[1], data.target_names[0]]
+target = [1 if x == 0 else 0 for x in data.target]
+features = list(data.feature_names)
 
-""" 
-Invertir mapeo a:
-- Benigno = 0 no es canceroso
-- Maligno = 1 es canceroso 
-"""
+# Crear DataFrame
+df = pd.DataFrame(data.data, columns = features)
 
-data_clases = [data.target_names[1], data.target_names[0]]
-data_target = [1 if x == 0 else 0 for x in list(data.target)]
-data_features = list(data.feature_names)
-
-# Crear df con los datos
-
-df = pd.DataFrame(data.data[:, :], columns = data_features)
-print(df.info)
-
-# Dividir los datos
-
+# División de características y etiquetas
 X = df
-y = pd.Series(data_target)
+y = pd.Series(target)
 
-print(X)
-print(y)
+# División en conjuntos de entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, 
+	test_size = 0.25, random_state = 0)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25,
-	random_state = 0)
+# Evaluar el modelo con diferentes valores de k
+valores_k = range(1, 50, 4)
+resultados_uniformes = {"train": [], "test": []}
+resultados_ponderados = {"train": [], "test": []}
 
-# Evaluar el modelo con distintas 
-# distribuciones de los datos
+def evaluar_modelo(k, tipo_pesos, resultados):
+    modelo = KNeighborsClassifier(n_neighbors = k, weights = tipo_pesos)
+    modelo.fit(X_train, y_train)
 
-valores_k = list(range(1, 50, 4))
-resultados_train_u = []
-resultados_test_u = []
-resultados_train_w = []
-resultados_test_w = []
-
-def instanciar_modelo(tipo, resultados_train, resultados_test):
-	clf = KNeighborsClassifier(n_neighbors = k, weights = tipo)
-	clf.fit(X_train, y_train)
-
-	y_train_pred = clf.predict(X_train)
-	y_pred = clf.predict(X_test)
-
-	resultados_train.append(accuracy_score(y_train_pred, y_train))
-	resultados_test.append(accuracy_score(y_pred, y_test))
+    resultados["train"].append(accuracy_score(y_train, modelo.predict(X_train)))
+    resultados["test"].append(accuracy_score(y_test, modelo.predict(X_test)))
 
 for k in valores_k:
-	instanciar_modelo("uniform", resultados_train_u, resultados_test_u)
-	instanciar_modelo("distance", resultados_train_w, resultados_test_w)
+    evaluar_modelo(k, "uniform", resultados_uniformes)
+    evaluar_modelo(k, "distance", resultados_ponderados)
 
-# Grafica de los datos
+# Gráfica de los resultados
+plt.figure(figsize = (14, 5))
+plt.subplot(1, 2, 1)
+plt.plot(valores_k, resultados_uniformes["train"], label = "Train")
+plt.plot(valores_k, resultados_uniformes["test"], label = "Test")
+plt.title("Pesos Uniformes")
+plt.xlabel("k")
+plt.ylabel("Precisión")
+plt.legend()
 
-f, ax = plt.subplots(1, 2, figsize = (14, 5), sharey = True)
+plt.subplot(1, 2, 2)
+plt.plot(valores_k, resultados_ponderados["train"], label = "Train")
+plt.plot(valores_k, resultados_ponderados["test"], label = "Test")
+plt.title("Pesos Ponderados")
+plt.xlabel("k")
+plt.legend()
 
-def grafica(indice, resultados_train, resultados_test, y = None):
-
-	ax[indice].plot(valores_k, resultados_train, valores_k, resultados_test)
-	ax[indice].legend(["Pesos uniformes - train", "Pesos uniformes - test"])
-	ax[indice].set(xlabel = "k", ylabel = y)
-
-grafica(0, resultados_train_u, resultados_test_u)
-grafica(1, resultados_train_w, resultados_test_w, "accuracy")
-
+plt.tight_layout()
 plt.show()
 
-# Buscar el mejor modelo basandose en 
-# la validacion cruzada y GridSearchCV 
-
-modelo = KNeighborsClassifier()
-
-n_neighbors = np.array([1, 2, 3, 5, 8, 10, 15, 20, 30, 50])
+# GridSearchCV para encontrar el mejor modelo
 param_grid = {
-	"n_neighbors": n_neighbors, "weights": ["uniform", "distance"],
-	"metric": ["euclidean", "chebyshev", "manhattan"]
+    "n_neighbors": [1, 2, 3, 5, 8, 10, 15, 20, 30, 50],
+    "weights": ["uniform", "distance"],
+    "metric": ["euclidean", "chebyshev", "manhattan"]
 }
 
-grid = GridSearchCV(estimator = modelo, param_grid = param_grid)
+grid = GridSearchCV(KNeighborsClassifier(), param_grid, cv = 5)
 grid.fit(X_train, y_train)
 
-print(grid.best_params_)
-print(pd.DataFrame(grid.cv_results_).sample(3))
-print(classification_report(y_test, grid.best_estimator_.predict(X_test), 
-	target_names = data_clases))
+# Resultados del mejor modelo
+print(f"Mejores parámetros: {grid.best_params_}")
+print(f"Reporte de clasificación:\n{classification_report(y_test, 
+	grid.best_estimator_.predict(X_test), target_names = clases)}")
