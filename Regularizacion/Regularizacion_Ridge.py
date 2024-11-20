@@ -1,69 +1,45 @@
 
 # Librerías
-
 import pandas as pd
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-# Dataset
-
+# Cargar el dataset
 df = pd.read_csv("../CSV/Advertising.csv")
 
-print(f"DF: \n {df}")
-print(f"DF Columnas: \n {df.columns}")
-print(f"DF cantidad de Columnas: \n {len(df.columns)}")
+# Seleccionar columnas numéricas y manejar valores nulos
+df = df.select_dtypes(exclude = "object").fillna(0)
 
-# Eliminar columnas con object
+# Escalar las características
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(df.drop(columns = ["Sales"]))
+y = df["Sales"]
 
-df = df.select_dtypes(exclude = "object")
-df = df.fillna(0)
+# División de los datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, 
+	test_size = 0.2, random_state = 42)
 
-# Escalar las caracteristicas
-
-escalador = StandardScaler()
-df_scaled = escalador.fit_transform(df)
-
-print(f"DF escalado:\n {df_scaled}")
-
-# Division de datos
-
-X_train, X_test, y_train, y_test = train_test_split(df_scaled, df["Sales"], 
-	random_state = 42, test_size = 0.2)
-
-print(X_train.shape)
-print(y_train.shape)
-
-# Modelo
-
+# Modelo Ridge
 modelo = Ridge(alpha = 0.1)
 
-# Entrenamiento
-
+# Entrenamiento del modelo
 modelo.fit(X_train, y_train)
 y_pred = modelo.predict(X_test)
 
-# Metricas
+# Evaluación del modelo
+mse = mean_squared_error(y_test, y_pred)
+print(f"MSE: {mse}")
 
-print(f"MSE: {mean_squared_error(y_test, y_pred)}")
+# Obtener coeficientes y nombres de las características
+feature_names = df.drop(columns = ["Sales"]).columns
+feature_coefs = list(zip(feature_names, modelo.coef_))
 
-# Obtener las mejores
-# caracteristicas para el modelo
-
-coefs = modelo.coef_
-
-# Caracteristicas y coeficientes
-
-feature_coefs = list(zip(df.columns, coefs))
-print(feature_coefs)
-
-# Ordenarlos de manera descendente 
-# y buscamos valor absoluto
-
+# Ordenar características por la magnitud del coeficiente
 feature_coefs.sort(key = lambda x: abs(x[1]), reverse = True)
 
-print("\nCaracteristicas mas importantes:\n")
-
+# Mostrar las características más importantes
+print("\nCaracterísticas más importantes:")
 for feature, coef in feature_coefs:
-	print(f"{feature}: {coef}")
+    print(f"{feature}: {coef}")

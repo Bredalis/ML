@@ -1,72 +1,42 @@
 
-# Objetivo es aumentar las ventas de un producto.
-# Utilizaremos el dataset "Advertising" que incluye 
-# datos de ventas en 200 mercados y presupuestos de 
-# publicidad en TV, radio y diario. Nuestra tarea es 
-# identificar la relación entre la inversión en publicidad 
-# y las ventas. Las variables predictoras son los 
-# presupuestos para cada canal (TV, radio, diario).
-
 # Librerías
-
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
-# Traer dataset
-
+# Cargar dataset
 df = pd.read_csv("../CSV/Advertising.csv")
 
-# Mostar principales datos
-
+# Mostrar los primeros datos
 print(df.head())
 
-# Configurar todas las
-# graficas a 20 x 5
-
+# Configurar tamaño de las gráficas
 plt.rcParams["figure.figsize"] = (20, 5)
 
-# Grafica
-
+# Graficar las relaciones
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
 df.plot.scatter(x = "TV", y = "Sales", ax = ax1)
 df.plot.scatter(x = "Radio", y = "Sales", ax = ax2)
 df.plot.scatter(x = "Newspaper", y = "Sales", ax = ax3)
-
 plt.show()
 
-# Modelo
+# Modelo de regresión lineal
+modelo = LinearRegression(fit_intercept=True)
 
-modelo = LinearRegression(fit_intercept = True)
-
-# Dividimos los datos en X y Y
-
-X = df.loc[:, ["TV"]]
+# Dividir los datos en X (predictoras) y Y (variable objetivo)
+X = df[["TV"]]
 y = df["Sales"]
 
-print(X)
-print(y)
-
-print(X.shape)
-print(y.shape)
-
-# Entrenamiento
-
+# Entrenar el modelo
 modelo.fit(X, y)
 
-# Coeficientes
+# Coeficientes del modelo
+print("Coeficientes:", modelo.coef_)
 
-print(modelo.coef_)
+# Predicción para 4 unidades de inversión en TV
+print("Predicción con 4 unidades de inversión:", modelo.predict([[4]]))
 
-# Predecir con 4 
-# unidades de inversion
-
-print(modelo.predict([[4]]))
-
-# Grafica
-
+# Graficar los resultados
 plt.scatter(X, y)
-plt.plot(X, modelo.predict(X))
-
+plt.plot(X, modelo.predict(X), color="red")
 plt.show()

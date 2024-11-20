@@ -1,31 +1,21 @@
 
 # Librerías
-
 import pandas as pd
 import seaborn as sns
 
-# Lectura del dataset
-
+# Cargar el dataset
 df = sns.load_dataset("tips")
-print(df.head())
 
-# Remover datos categoricas
+# Separar columnas numéricas y categóricas
+df_numerico = df.select_dtypes(include = ["number"])
+df_categoricas = df.select_dtypes(exclude = ["number"])
 
-df_numerico = df.drop(["sex", "smoker", "day", "time"], axis = 1)
-print(df_numerico)
-
-# Guardar datos categoricos
-
-df_categoricas = df.filter(["sex", "smoker", "day", "time"])
-print(df_categoricas)
-
-# Convertir a columnas numericas
-
-categorico_numerico = pd.get_dummies(df_categoricas, 
+# Convertir variables categóricas a numéricas usando One-Hot Encoding
+df_categoricas_numerico = pd.get_dummies(df_categoricas, 
 	drop_first = True, dtype = int)
-print(categorico_numerico)
 
-# DF final con datos numericos
+# Combinar las columnas numéricas y categóricas transformadas
+df_final = pd.concat([df_numerico, df_categoricas_numerico], axis = 1)
 
-df = pd.concat([df_numerico, categorico_numerico], axis = 1)
-print(df)
+# Mostrar el DataFrame final
+print(df_final)
